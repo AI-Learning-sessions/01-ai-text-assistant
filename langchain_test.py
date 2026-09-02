@@ -6,7 +6,8 @@ from langchain_core.output_parsers import StrOutputParser
 load_dotenv()
 
 model = ChatGoogleGenerativeAI(
-    model="gemini-3.6-flash"
+    model="gemini-3.6-flash",
+    thinking_level = "minimal"
 )
 
 prompt = ChatPromptTemplate.from_template(
@@ -17,10 +18,15 @@ parser = StrOutputParser()
 
 chain = prompt | model | parser
 
-topic = input("Enter a topic: ")
+while True:
 
-response = chain.invoke({
-    "topic": topic
-})
+  topic = input("Enter a topic: ")
 
-print(response)
+  if topic.lower() == "exit":
+      break
+
+  response = chain.invoke({
+      "topic": topic
+  })
+
+  print(response)
