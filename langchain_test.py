@@ -7,50 +7,68 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 load_dotenv()
 
-model = ChatGoogleGenerativeAI(
-    model="gemini-3.6-flash",
-    thinking_level = "minimal"
-)
+def create_model():
+    return ChatGoogleGenerativeAI(
+        model="gemini-3.6-flash",
+        thinking_level="minimal"
+    )
 
-prompt = ChatPromptTemplate.from_messages([
-  ( 
-    "system",
-    "You are a helpful AI assistant."
-  ),
-  MessagesPlaceholder("messages"),
-  (
-     "human",
-     "{topic}"
-  )
-])
+def create_chain(model):
 
-parser = StrOutputParser()
-chain = prompt | model | parser
-messages = []
+    prompt = ChatPromptTemplate.from_messages([
+        (
+            "system",
+            "You are a helpful AI assistant."
+        ),
+        MessagesPlaceholder("messages")
+    ])
 
-while True:
+    parser = StrOutputParser()
 
-  topic = input("Enter a topic: ")
+    return prompt | model | parser
 
-  if topic.lower() == "exit":
-      break
+def chat(chain):
 
-  messages.append(
-     HumanMessage(content=topic)
-  )
+    messages = []
 
-  try:
-      response = chain.invoke({
-          "messages": messages,
-          "topic": topic
-      })
+    while True:
 
-      messages.append(
-        AIMessage(content=response)
-      )
+        topic = input("You: ")
 
-      print("AI:", response)
+        if topic.lower() == "exit":
+            break
 
-  except Exception as e:
-     messages.pop()
-     print("Error:", e)
+        messages.append(
+            HumanMessage(content=topic)
+        )
+
+        try:
+
+            response = chain.invoke({
+                "messages": messages
+            })
+
+            messages.append(
+                AIMessage(content=response)
+            )
+
+            print("AI:", response)
+
+        except Exception as e:
+
+            messages.pop()
+
+            print("Error:", e)
+
+def main():
+
+    load_dotenv()
+
+    model = create_model()
+
+    chain = create_chain(model)
+
+    chat(chain)
+
+if __name__ == "__main__":
+    main()
