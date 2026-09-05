@@ -51,11 +51,21 @@ def chat(chain):
 
     messages = []
 
+    print("\n================================")
+    print("       AI Text Assistant")
+    print("================================")
+    print("Type 'exit' to quit.\n")
+
     while True:
 
-        topic = input("You: ")
+        topic = input("You: ").strip()
+
+        if not topic:
+            print("⚠️ Please enter a message.")
+            continue
 
         if topic.lower() == "exit":
+            print("Exiting the chat. Goodbye!")
             break
 
         messages.append(
