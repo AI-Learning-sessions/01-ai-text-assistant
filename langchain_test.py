@@ -4,10 +4,12 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.messages import HumanMessage, AIMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
+from config import MODEL_NAME, THINKING_LEVEL, MAX_TURNS
+
 def create_model():
     return ChatGoogleGenerativeAI(
-        model="gemini-3.6-flash",
-        thinking_level="minimal"
+        model=MODEL_NAME,
+        thinking_level=THINKING_LEVEL
     )
 
 def create_chain(model):
@@ -48,8 +50,6 @@ def handle_error(e):
 def chat(chain):
 
     messages = []
-
-    MAX_TURNS = 5
 
     while True:
 
